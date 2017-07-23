@@ -1,5 +1,6 @@
-const BigNumber = require('bignumber.js')
+const assert  = require("assert")
 const net = require('net')
+const BigNumber = require('bignumber.js')
 const MuduoBuffer = require("./muduoBuffer")
 
 // const thriftEncode = require('./encode')

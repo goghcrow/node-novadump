@@ -1,4 +1,4 @@
-const assert  = require("assert")
+const assert = require("assert")
 const net = require('net')
 const BigNumber = require('bignumber.js')
 const MuduoBuffer = require("./muduoBuffer")
@@ -249,7 +249,9 @@ function novaDecodeHeader(buf, offset = 0) {
   try {
     attach = JSON.parse(attach)
   } catch (error) {
-    console.error("json decode nova attach error", attach, error)
+    if (attach) {
+      console.error("json decode nova attach error", attach, error)
+    }
     attach = {}
   }
 

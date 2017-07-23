@@ -249,7 +249,7 @@ function novaDecodeHeader(buf, offset = 0) {
   try {
     attach = JSON.parse(attach)
   } catch (error) {
-    console.error("json decode nova attach error", error)
+    console.error("json decode nova attach error", attach, error)
     attach = {}
   }
 

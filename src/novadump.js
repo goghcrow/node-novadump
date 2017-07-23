@@ -8,6 +8,7 @@ const BigNumber = require("bignumber.js")
 const MuduoBuffer = require("./muduoBuffer")
 
 
+
 pcapSession.on("packet", function (raw_packet) {
   const packet = pcap.decode.packet(raw_packet)
   tcpTracker.track_packet(packet)
@@ -24,7 +25,6 @@ tcpTracker.on("session", function (session) {
 
   session.on("data send", function (session, data) {
     // console.log(session.src_name + " -> " + session.dst_name + " data send " + session.send_bytes_payload + " + " + data.length + " bytes")
-
     if (isNovaSession === void 0) {
       sendBuf.append(data)
       isNovaSession = nova.detect(sendBuf)
@@ -38,7 +38,6 @@ tcpTracker.on("session", function (session) {
     } else if (isNovaSession === true) {
       sendBuf.append(data)
       let msgSize = sendBuf.peekInt32()
-
       if (sendBuf.readableBytes() >= msgSize) {
         let novaBuf = sendBuf.read(msgSize)
         let { ip, port, service, method, seq, attach, thriftBuffer } = nova.decode(novaBuf)
@@ -71,14 +70,12 @@ tcpTracker.on("session", function (session) {
   })
 
   session.on("end", function (session) {
-    if (isNovaSession === false) {
-      return
+    if (isNovaSession === true) {
+      console.log("End of TCP session between " + session.src_name + " and " + session.dst_name)
+      // console.log("Set stats for session: ", session.session_stats())
+      sendBuf = void 0
+      recvBuf = void 0
     }
-
-    console.log("End of TCP session between " + session.src_name + " and " + session.dst_name)
-    // console.log("Set stats for session: ", session.session_stats())
-    sendBuf = void 0
-    recvBuf = void 0
   })
 })
 

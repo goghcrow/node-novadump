@@ -2,7 +2,7 @@ const assert = require("assert")
 const BigNumber = require("bignumber.js")
 
 if (!Buffer.allocUnsafe) {
-  Buffer.allocUnsafe = function(size) {
+  Buffer.allocUnsafe = function (size) {
     return new Buffer(size)
   }
 }
@@ -91,12 +91,16 @@ module.exports = class MuduoBuffer {
     return this._writeIndex - this._readIndex
   }
 
+  get length() {
+    return this._writeIndex - this._readIndex
+  }
+
   readableBytes() {
     return this._writeIndex - this._readIndex
   }
 
   writableBytes() {
-    return this._buffer.byteLength - this._writeIndex
+    return (this._buffer.byteLength || this._buffer.length) - this._writeIndex
   }
 
   prependableBytes() {
@@ -182,9 +186,9 @@ module.exports = class MuduoBuffer {
   append(data /*: string|Buffer*/, len = void 0) {
     if (data instanceof Buffer) {
       if (len === void 0) {
-        len = data.byteLength
+        len = data.byteLength || data.length
       } else {
-        assert(len <= data.byteLength)
+        assert(len <= (data.byteLength || data.length))
       }
       this.ensureWritableBytes(len)
       data.copy(this._buffer, this._writeIndex, 0, len)
@@ -424,7 +428,7 @@ module.exports = class MuduoBuffer {
   }
 
   internalCapacity() {
-    return this._buffer.byteLength
+    return this._buffer.byteLength || this._buffer.length
   }
 
   toString(...args) {

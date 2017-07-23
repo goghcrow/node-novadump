@@ -27,9 +27,13 @@ tcpTracker.on("session", function (session) {
   session.on("data send", (function () {
     let detected
     return function (session, data) {
+      if (detected === false) {
+        return
+      }
+      sendBuf.append(data)
+
       // console.log(session.src_name + " -> " + session.dst_name + " data send " + session.send_bytes_payload + " + " + data.length + " bytes")
       if (detected === void 0) {
-        sendBuf.append(data)
         detected = nova.detect(sendBuf)
       }
 
@@ -40,7 +44,6 @@ tcpTracker.on("session", function (session) {
         return
       } else if (detected === true) {
         isNovaSession = true
-        sendBuf.append(data)
         let msgSize = sendBuf.peekInt32()
         if (sendBuf.readableBytes() >= msgSize) {
           let novaBuf = sendBuf.read(msgSize)
@@ -55,9 +58,13 @@ tcpTracker.on("session", function (session) {
   session.on("data recv", (function () {
     let detected
     return function (session, data) {
+      if (detected === false) {
+        return
+      }
+      recvBuf.append(data)
+
       // console.log(session.dst_name + " -> " + session.src_name + " data recv " + session.recv_bytes_payload + " + " + data.length + " bytes")    
       if (detected === void 0) {
-        recvBuf.append(data)
         detected = nova.detect(recvBuf)
       }
 
@@ -68,7 +75,6 @@ tcpTracker.on("session", function (session) {
         return
       } else if (detected === true) {
         isNovaSession = true
-        recvBuf.append(data)
         let msgSize = recvBuf.peekInt32()
         if (recvBuf.readableBytes() >= msgSize) {
           let novaBuf = recvBuf.read(msgSize)

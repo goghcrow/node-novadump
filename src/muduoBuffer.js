@@ -1,6 +1,11 @@
 const assert = require("assert")
 const BigNumber = require("bignumber.js")
 
+if (!Buffer.allocUnsafe) {
+  Buffer.allocUnsafe = function(size) {
+    return new Buffer(size)
+  }
+}
 
 function encodeInt64(x) {
   if (!(x instanceof BigNumber)) {

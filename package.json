@@ -1,0 +1,24 @@
+{
+  "name": "novadump",
+  "version": "0.0.1",
+  "license": "MIT",
+  "author": {"name": "xiaofeng"},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/goghcrow/node-novadump.git"
+  },
+  "main": ".src/novadump",
+  "scripts": {
+    "lint": "eslint .",
+    "build": "babel src -d lib"
+  },
+  "dependencies": {
+    "pcap": "2.0.0",
+    "bignumber.js": "^2.4.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.17.1",
+    "babel-cli": "^6.24.1",
+    "babel-preset-es2015": "^6.24.1"
+  }
+}

@@ -5,7 +5,7 @@ const pcap = require("pcap")
 const pcapSession = pcap.createSession("", "tcp")
 const tcpTracker = new pcap.TCPTracker()
 const BigNumber = require("bignumber.js")
-const MuduoBuffer = require("muduoBuffer")
+const MuduoBuffer = require("./muduoBuffer")
 
 
 pcapSession.on("packet", function (raw_packet) {

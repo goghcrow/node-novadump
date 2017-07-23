@@ -1,4 +1,4 @@
-const assert  = require("assert")
+const assert = require("assert")
 const BigNumber = require("bignumber.js")
 
 if (!Buffer.allocUnsafe) {

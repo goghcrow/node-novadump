@@ -39,9 +39,7 @@ tcpTracker.on("session", function (session) {
       sendBuf.append(data)
       let msgSize = sendBuf.peekInt32()
 
-      if (sendBuf.readableBytes() < msgSize) {
-        return
-      } else {
+      if (sendBuf.readableBytes() >= msgSize) {
         let novaBuf = sendBuf.read(msgSize)
         let { ip, port, service, method, seq, attach, thriftBuffer } = nova.decode(novaBuf)
         console.log(`send ${service}:${method}`)
@@ -64,10 +62,8 @@ tcpTracker.on("session", function (session) {
     } else if (isNovaSession === true) {
       recvBuf.append(data)
       let msgSize = recvBuf.peekInt32()
-      if (recvBuf.readableBytes() < msgSize) {
-        return
-      } else {
-        let novaBuf = sendBuf.read(msgSize)
+      if (recvBuf.readableBytes() >= msgSize) {
+        let novaBuf = recvBuf.read(msgSize)
         let { ip, port, service, method, seq, attach, thriftBuffer } = nova.decode(novaBuf)
         console.log(`recv ${service}:${method}`)
       }

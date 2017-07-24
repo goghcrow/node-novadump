@@ -3,14 +3,52 @@
 const nova = require("./nova")
 const pcap = require("pcap")
 const pcapSession = pcap.createSession("", "tcp")
-// o(╯□╰)o 状态机有BUG, session的开始packet被丢弃没处理
-// const tcpTracker = new pcap.TCPTracker()
-const TCPTracker = require("./tcpTracker").TCPTracker
-const tcpTracker = new TCPTracker()
+const tcpTracker = new pcap.TCPTracker()
+// const TCPTracker = require("./tcpTracker").TCPTracker
+// const tcpTracker = new TCPTracker()
 const BigNumber = require("bignumber.js")
 const MuduoBuffer = require("./muduoBuffer")
 
 
+// 修复官方tcpTracker一个丢包的bug
+tcpTracker.track_packet = function (packet) {
+  var ip, tcp, src, dst, key, session;
+
+  if (packet.payload.payload instanceof IPv4 && packet.payload.payload.payload instanceof TCP) {
+    ip = packet.payload.payload;
+    tcp = ip.payload;
+    src = ip.saddr + ":" + tcp.sport;
+    dst = ip.daddr + ":" + tcp.dport;
+
+    if (src < dst) {
+      key = src + "-" + dst;
+    } else {
+      key = dst + "-" + src;
+    }
+
+    var is_new = false;
+    session = this.sessions[key];
+    if (!session) {
+      is_new = true;
+      session = new TCPSession();
+      this.sessions[key] = session;
+    }
+
+    session.track(packet);
+
+    // need to track at least one packet before we emit this new session, otherwise nothing
+    // will be initialized.
+    if (is_new) {
+      this.emit("session", session);
+
+      if (session.state === "ESTAB") {
+        session.ESTAB(packet);
+      }
+    }
+  }
+  // silently ignore any non IPv4 TCP packets
+  // user should filter these out with their pcap filter, but oh well.
+}.bind(tcpTracker);
 
 pcapSession.on("packet", function (raw_packet) {
   const packet = pcap.decode.packet(raw_packet)
@@ -50,7 +88,7 @@ tcpTracker.on("session", function (session) {
         if (sendBuf.readableBytes() >= msgSize) {
           let novaBuf = sendBuf.read(msgSize)
           let { ip, port, service, method, seq, attach, thriftBuffer } = nova.decode(novaBuf)
-          console.log(`send ${service}:${method}`)
+          console.log(`send ${service}:${method} ${seq}`)
         }
       }
     }
@@ -81,7 +119,7 @@ tcpTracker.on("session", function (session) {
         if (recvBuf.readableBytes() >= msgSize) {
           let novaBuf = recvBuf.read(msgSize)
           let { ip, port, service, method, seq, attach, thriftBuffer } = nova.decode(novaBuf)
-          console.log(`recv ${service}:${method}`)
+          console.log(`recv ${service}:${method} ${seq}`)
         }
       }
     }

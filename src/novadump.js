@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const nova = require("./nova")
+const thrift = require("./thrift")
 const pcap = require("pcap")
 const pcapSession = pcap.createSession("", "tcp")
 const tcpTracker = new pcap.TCPTracker()
@@ -91,6 +92,7 @@ tcpTracker.on("session", function (session) {
           let novaBuf = sendBuf.read(msgSize)
           let { ip, port, service, method, seq, attach, thriftBuffer } = nova.decode(novaBuf)
           console.log(`send ${service}:${method} ${seq}`)
+          console.log(JSON.stringify(thrift.decode(thriftBuffer)))
         }
       }
     }
@@ -122,6 +124,7 @@ tcpTracker.on("session", function (session) {
           let novaBuf = recvBuf.read(msgSize)
           let { ip, port, service, method, seq, attach, thriftBuffer } = nova.decode(novaBuf)
           console.log(`recv ${service}:${method} ${seq}`)
+          console.log(JSON.stringify(thrift.decode(thriftBuffer)))
         }
       }
     }

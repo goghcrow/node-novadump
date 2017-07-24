@@ -214,8 +214,14 @@ class Thrift {
 }
 
 const decode = (buf, offset = 0) => {
-  let thrift = new Thrift(buf, offset)
-  return thrift.parse()
+  try {
+    let thrift = new Thrift(buf, offset)
+    return thrift.parse()
+  } catch (error) {
+    console.error(error)
+    console.log(buf.toString("hex"), offset)
+    return null
+  }
 }
 
 // const hex = "80010001000000156765744d657267656446726f6d536f757263654964000000000a00010000000000f49f800a000200000000980337f10800030000000100"

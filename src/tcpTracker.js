@@ -32,15 +32,21 @@ TCPTracker.prototype.track_packet = function (packet) {
             this.sessions[key] = session;
         }
 
-        // 此处调整顺序, 先触发session创建, 然后调用track
+        session.track(packet);
 
         // need to track at least one packet before we emit this new session, otherwise nothing
         // will be initialized.
         if (is_new) {
             this.emit("session", session);
+            
+            // session 第一个包的estab状态判断不准确, 所以可能携带数据, 不处理就会被丢弃
+            // 这里直接驱动状态机继续处理packet
+            if (session.state === "ESTAB") {
+                session.ESTAB(packet);
+            }
         }
 
-        session.track(packet);
+
     }
     // silently ignore any non IPv4 TCP packets
     // user should filter these out with their pcap filter, but oh well.
@@ -105,10 +111,6 @@ TCPSession.prototype.track = function (packet) {
             this.missed_syn = true;
             this.connect_time = this.current_cap_time;
             this.state = "ESTAB";  // I mean, probably established, right? Unless it isn't.
-
-            // 因为这里可能不是estab, 所以可能携带数据, 不处理就会被丢弃
-            // 这里直接驱动状态机继续处理packet
-            this.ESTAB(packet);
         }
 
         this.syn_time = this.current_cap_time;

@@ -50,7 +50,7 @@ class Thrift {
 
   parse() {
     let originOffset = this.offset
-    
+
     let version = this.buf.readInt32BE(this.offset)
     this.offset += 4
 
@@ -130,6 +130,9 @@ class Thrift {
       case TYPES.STRUCT: {
         return this.parseStruct()
       }
+      case TYPES.SET: {
+        return this.parseSet()
+      }
       case TYPES.LIST: {
         return this.parseList()
       }
@@ -171,6 +174,22 @@ class Thrift {
       fields.push({ id, type, value })
     }
     return { fields }
+  }
+
+  parseSet() {
+    let valueType = this.buf.readInt8(this.offset)
+    this.offset += 1
+
+    let count = this.buf.readInt32BE(this.offset)
+    this.offset += 4
+
+    let data = [];
+    for (let i = 0; i < count; i++) {
+      let value = this.parserValue(valueType)
+      data.push(value)
+    }
+    valueType = TYPES_R[valueType]
+    return { valueType, data }
   }
 
   parseList() {
@@ -228,6 +247,7 @@ const decode = (buf, offset = 0) => {
   }
 }
 
+// const hex = "80010001000000116765744272696566427943617264496473000000000800010112ef700e00020a00000001000000000000000000"
 // const hex = "80010001000000156765744d657267656446726f6d536f757263654964000000000a00010000000000f49f800a000200000000980337f10800030000000100"
 // const buf = new Buffer(hex, "hex")
 // console.log(JSON.stringify(decode(buf)))

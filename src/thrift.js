@@ -222,4 +222,4 @@ const decode = (buf, offset = 0) => {
 // const buf = new Buffer(hex, "hex")
 // console.log(JSON.stringify(decode(buf)))
 
-module.exports.thrift = { decode }
+module.exports = { decode }

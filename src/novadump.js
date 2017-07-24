@@ -4,16 +4,15 @@ const nova = require("./nova")
 const pcap = require("pcap")
 const pcapSession = pcap.createSession("", "tcp")
 const tcpTracker = new pcap.TCPTracker()
-// const TCPTracker = require("./tcpTracker").TCPTracker
-// const tcpTracker = new TCPTracker()
 const BigNumber = require("bignumber.js")
 const MuduoBuffer = require("./muduoBuffer")
 
+
+/// {{{ 修复官方tcpTracker一个丢包的bug
 const TCPSession = pcap.TCPSession
 const IPv4 = require("pcap/decode/ipv4")
 const TCP = require("pcap/decode/tcp")
 
-// 修复官方tcpTracker一个丢包的bug
 tcpTracker.track_packet = function (packet) {
   var ip, tcp, src, dst, key, session;
 
@@ -39,8 +38,6 @@ tcpTracker.track_packet = function (packet) {
 
     session.track(packet);
 
-    // need to track at least one packet before we emit this new session, otherwise nothing
-    // will be initialized.
     if (is_new) {
       this.emit("session", session);
 
@@ -49,9 +46,11 @@ tcpTracker.track_packet = function (packet) {
       }
     }
   }
-  // silently ignore any non IPv4 TCP packets
-  // user should filter these out with their pcap filter, but oh well.
-}.bind(tcpTracker);
+}.bind(tcpTracker)
+/// }}}
+
+
+
 
 pcapSession.on("packet", function (raw_packet) {
   const packet = pcap.decode.packet(raw_packet)

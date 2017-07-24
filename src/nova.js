@@ -196,9 +196,9 @@ function novaDecodeHeader(buf, offset = 0) {
   let version = buf.readInt8(offset)
   offset += 1
   if (version !== NOVA_VERSION) {
-    console.error("invalid nova version", version)
-    // TODO BUG
-    throw new NovaCodecError(`unsupport nova packet version`)
+    // version 暂时没用, 不同实现不一致, 忽略
+    // console.error("invalid nova version", version)
+    // throw new NovaCodecError(`unsupport nova packet version`)
   }
 
   // read ip

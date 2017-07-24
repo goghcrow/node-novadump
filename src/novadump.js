@@ -18,7 +18,6 @@ pcapSession.on("packet", function (raw_packet) {
 tcpTracker.on("session", function (session) {
   // console.log("Start of TCP session between " + session.src_name + " and " + session.dst_name)
 
-  // let sessionId = session.src_name + ':' + session.dst_name
   let isNovaSession = void 0
   let sendBuf = new MuduoBuffer()
   let recvBuf = new MuduoBuffer()

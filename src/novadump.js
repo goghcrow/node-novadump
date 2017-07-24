@@ -9,6 +9,7 @@ const tcpTracker = new pcap.TCPTracker()
 const BigNumber = require("bignumber.js")
 const MuduoBuffer = require("./muduoBuffer")
 
+const TCPSession = pcap.TCPSession
 const IPv4 = require("pcap/decode/ipv4")
 const TCP = require("pcap/decode/tcp")
 

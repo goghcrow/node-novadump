@@ -9,6 +9,8 @@ const tcpTracker = new pcap.TCPTracker()
 const BigNumber = require("bignumber.js")
 const MuduoBuffer = require("./muduoBuffer")
 
+const IPv4 = require("pcap/decode/ipv4")
+const TCP = require("pcap/decode/tcp")
 
 // 修复官方tcpTracker一个丢包的bug
 tcpTracker.track_packet = function (packet) {

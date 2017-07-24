@@ -3,7 +3,9 @@
 const nova = require("./nova")
 const pcap = require("pcap")
 const pcapSession = pcap.createSession("", "tcp")
-const tcpTracker = new pcap.TCPTracker()
+// o(╯□╰)o 状态机有BUG, session的开始packet被丢弃没处理
+// const tcpTracker = new pcap.TCPTracker()
+const tcpTracker = require("./tcpTracker").TCPTracker()
 const BigNumber = require("bignumber.js")
 const MuduoBuffer = require("./muduoBuffer")
 

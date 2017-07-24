@@ -44,7 +44,6 @@ const METHODS_R = Object.keys(METHODS).reduce((base, key) => {
 
 class Thrift {
   constructor(buf, offset = 0) {
-    assert(buf instanceof Buffer)
     this.buf = buf
     this.offset = offset
   }
@@ -214,12 +213,17 @@ class Thrift {
 }
 
 const decode = (buf, offset = 0) => {
+  assert(buf instanceof Buffer)
+  let len = buf.byteLength || buf.length
+  if (len - offset <= 0) {
+    return null
+  }
+
   try {
     let thrift = new Thrift(buf, offset)
     return thrift.parse()
   } catch (error) {
-    console.error(error)
-    console.log(buf.toString("hex"), offset)
+    console.error("thrift decode error", error, buf.toString("hex"), offset)
     return null
   }
 }

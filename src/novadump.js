@@ -95,8 +95,8 @@ tcpTracker.on("session", function (session) {
             return
           }
           const { type, name, id, fields } = thriftObj
-          console.log(`\x1b[1;33m${type}\x1b[0m \x1b[1m${session.src}\x1b[0m > \x1b[1m${session.dst}\x1b[0m nova_ip \x1b[1m${ip}\x1b[0m nova_port \x1b[1m${port}\x1b[0m nova_seq \x1b[1m${seq}\x1b[0m`)
-          console.log(`\x1b[1;32m${service}.${method}\x1b[0m`)
+          console.log(`\x1b[1m${session.src}\x1b[0m > \x1b[1m${session.dst}\x1b[0m nova_ip \x1b[1m${ip}\x1b[0m nova_port \x1b[1m${port}\x1b[0m nova_seq \x1b[1m${seq}\x1b[0m`)
+          console.log(`\x1b[1;33m${type}\x1b[0m \x1b[1;32m${service}.${method}\x1b[0m`)
           attach && console.log(`\x1b[2m${JSON.stringify(attach)}\x1b[0m`)
           console.log(JSON.stringify(fields))
           console.log()
@@ -135,8 +135,8 @@ tcpTracker.on("session", function (session) {
             return
           }
           const { type, name, id, fields } = thriftObj
-          console.log(`\x1b[1;33m${type}\x1b[0m \x1b[1m${session.src}\x1b[0m > \x1b[1m${session.dst}\x1b[0m nova_ip \x1b[1m${ip}\x1b[0m nova_port \x1b[1m${port}\x1b[0m nova_seq \x1b[1m${seq}\x1b[0m`)
-          console.log(`\x1b[1;32m${service}.${method}\x1b[0m`)
+          console.log(`\x1b[1m${session.src}\x1b[0m > \x1b[1m${session.dst}\x1b[0m nova_ip \x1b[1m${ip}\x1b[0m nova_port \x1b[1m${port}\x1b[0m nova_seq \x1b[1m${seq}\x1b[0m`)
+          console.log(`\x1b[1;33m${type}\x1b[0m \x1b[1;32m${service}.${method}\x1b[0m`)
           attach && console.log(`\x1b[2m${JSON.stringify(attach)}\x1b[0m`)
           console.log(JSON.stringify(fields))
           console.log()

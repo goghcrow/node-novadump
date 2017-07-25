@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 const nova = require("./nova")
 const thrift = require("./thrift")
 const pcap = require("pcap")

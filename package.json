@@ -7,7 +7,7 @@
     "type": "git",
     "url": "https://github.com/goghcrow/node-novadump.git"
   },
-  "main": ".src/novadump",
+  "main": "./novadump",
   "scripts": {
     "lint": "eslint .",
     "build": "babel src -d lib"

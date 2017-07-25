@@ -254,7 +254,7 @@ function novaDecodeHeader(buf, offset = 0) {
     if (attach) {
       console.error("json decode nova attach error", attach, error)
     }
-    attach = {}
+    attach = null
   }
 
   return { msgSize, headerSize, ip, port, service, method, seq, attach, thriftOffset: offset }

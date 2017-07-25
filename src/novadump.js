@@ -86,15 +86,18 @@ tcpTracker.on("session", function (session) {
         return
       } else if (detected === true) {
         isNovaSession = true
-        let msgSize = sendBuf.peekInt32()
+        const msgSize = sendBuf.peekInt32()
         if (sendBuf.readableBytes() >= msgSize) {
-          let novaBuf = sendBuf.read(msgSize)
-          let { ip, port, service, method, seq, attach, thriftBuffer } = nova.decode(novaBuf)
-          let { type, name, id, fields } = thrift.decode(thriftBuffer)
-          
-          console.log(`\x1b[1;32m${type}\x1b[0m \x1b[1m${session.src}\x1b[0m > \x1b[1m${session.dst}\x1b[0m nova_ip \x1b[1m${ip}\x1b[0m nova_port \x1b[1m${port}\x1b[0m nova_seq \x1b[1m${seq}\x1b[0m`)
-          console.log(`\x1b[1;33m${service}.${method}\x1b[0m`)
-          console.log(`\x1b[2m${JSON.stringify(attach)}\x1b[0m`)
+          const novaBuf = sendBuf.read(msgSize)
+          const { ip, port, service, method, seq, attach, thriftBuffer } = nova.decode(novaBuf)
+          const thriftObj = thrift.decode(thriftBuffer)
+          if (thriftObj === null) {
+            return
+          }
+          const { type, name, id, fields } = thriftObj
+          console.log(`\x1b[1;33m${type}\x1b[0m \x1b[1m${session.src}\x1b[0m > \x1b[1m${session.dst}\x1b[0m nova_ip \x1b[1m${ip}\x1b[0m nova_port \x1b[1m${port}\x1b[0m nova_seq \x1b[1m${seq}\x1b[0m`)
+          console.log(`\x1b[1;32m${service}.${method}\x1b[0m`)
+          attahc && console.log(`\x1b[2m${JSON.stringify(attach)}\x1b[0m`)
           console.log(JSON.stringify(fields))
           console.log()
         }
@@ -123,14 +126,18 @@ tcpTracker.on("session", function (session) {
         return
       } else if (detected === true) {
         isNovaSession = true
-        let msgSize = recvBuf.peekInt32()
+        const msgSize = recvBuf.peekInt32()
         if (recvBuf.readableBytes() >= msgSize) {
-          let novaBuf = recvBuf.read(msgSize)
-          let { ip, port, service, method, seq, attach, thriftBuffer } = nova.decode(novaBuf)
-          let { type, name, id, fields } = thrift.decode(thriftBuffer)
-          console.log(`\x1b[1;32m${type}\x1b[0m \x1b[1m${session.src}\x1b[0m > \x1b[1m${session.dst}\x1b[0m nova_ip \x1b[1m${ip}\x1b[0m nova_port \x1b[1m${port}\x1b[0m nova_seq \x1b[1m${seq}\x1b[0m`)
-          console.log(`\x1b[1;33m${service}.${method}\x1b[0m`)
-          console.log(`\x1b[2m${JSON.stringify(attach)}\x1b[0m`)
+          const novaBuf = recvBuf.read(msgSize)
+          const { ip, port, service, method, seq, attach, thriftBuffer } = nova.decode(novaBuf)
+          const thriftObj = thrift.decode(thriftBuffer)
+          if (thriftObj === null) {
+            return
+          }
+          const { type, name, id, fields } = thriftObj
+          console.log(`\x1b[1;33m${type}\x1b[0m \x1b[1m${session.src}\x1b[0m > \x1b[1m${session.dst}\x1b[0m nova_ip \x1b[1m${ip}\x1b[0m nova_port \x1b[1m${port}\x1b[0m nova_seq \x1b[1m${seq}\x1b[0m`)
+          console.log(`\x1b[1;32m${service}.${method}\x1b[0m`)
+          attahc && console.log(`\x1b[2m${JSON.stringify(attach)}\x1b[0m`)
           console.log(JSON.stringify(fields))
           console.log()
         }

@@ -8,13 +8,17 @@
     "url": "https://github.com/goghcrow/node-novadump.git"
   },
   "main": "./novadump",
+  "bin": {
+    "novadump": "novadump"
+  },
   "scripts": {
     "lint": "eslint .",
     "build": "babel src -d lib"
   },
   "dependencies": {
     "pcap": "2.0.0",
-    "bignumber.js": "^2.4.0"
+    "bignumber.js": "^2.4.0",
+    "hessian.js": "^2.3.1"
   },
   "devDependencies": {
     "eslint": "^3.17.1",
